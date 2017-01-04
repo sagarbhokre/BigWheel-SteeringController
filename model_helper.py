@@ -134,11 +134,9 @@ class ModelHelper:
         curr_id = len(self.y)
         self.x[curr_id, :, :, :] = x_in
         self.y.append(y_in)
-        print ("In image", len(self.y))
         if len(self.y) == BATCH_SIZE:
             y = np.array(self.y)
             #x = np.array(self.x)
-            print self.x.shape
             print("lr: ", self.model.optimizer.get_config()['lr'])
             hist = self.model.fit(self.x, y, nb_epoch=1, batch_size=BATCH_SIZE, verbose=1, validation_data=(self.x, self.y))
             self.y = []
