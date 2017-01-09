@@ -190,16 +190,12 @@ class ModelHelper:
         plt.legend(['train', 'test'], loc='upper right')
         plt.show()
 
-    def plot_predictions(self, x, y, x_val, y_val):
+    def plot_predictions(self, x, y):
         orig_steer = []
         pred_steering_angle = []
         orig_steer = y.tolist()
-        for val in y_val:
-            orig_steer.append(val)
 
         for image in x:
-            pred_steering_angle.append(float(self.model.predict(image[None, :, :, :], batch_size=1)))
-        for image in x_val:
             pred_steering_angle.append(float(self.model.predict(image[None, :, :, :], batch_size=1)))
 
         print len(orig_steer), len(pred_steering_angle)
@@ -239,5 +235,5 @@ if __name__ == '__main__':
     model_handle.save_model_to_json_file(model_filename)
     model_handle.save_model_weights(model_filename)
     #model_handle.plot_metrics(hist)
-    model_handle.plot_predictions(x, y, x_val, y_val)
+    model_handle.plot_predictions(x, y)
     #sys.exit(0)
