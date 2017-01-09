@@ -18,7 +18,7 @@ MOMENTUM = 0.01
 REGULARIZE_PARAM=0.1
 DECAY = 0.0
 
-database_loc = "../simulator-linux/driving_log.csv"
+database_loc = "./simulator-linux/driving_log.csv"
 
 DATA_WIDTH = 200
 DATA_HEIGHT = 66
@@ -58,12 +58,12 @@ class ModelHelper:
         model = Sequential()
         model.add(Convolution2D(24, 5, 5, name='Conv1', border_mode='same', subsample=(2, 2),
                                 input_shape=(DATA_HEIGHT, DATA_WIDTH, 3), activation='relu'))
-        model.add(Convolution2D(36, 5, 5, name='Conv2', border_mode='same', subsample=(2, 2))) #), W_regularizer=l2(REGULARIZE_PARAM),                                activity_regularizer=activity_l2(REGULARIZE_PARAM))) #, activation='relu'))
-        model.add(Convolution2D(48, 5, 5, name='Conv3', border_mode='same', subsample=(2, 2)))#, W_regularizer=l2(REGULARIZE_PARAM),                                activity_regularizer=activity_l2(REGULARIZE_PARAM)))#, activation='relu'))
-        model.add(Convolution2D(64, 3, 3, name='Conv4', border_mode='same', subsample=(1, 1)))#, W_regularizer=l2(REGULARIZE_PARAM),                                activity_regularizer=activity_l2(REGULARIZE_PARAM)))#, activation='relu'))
-        model.add(Convolution2D(64, 3, 3, name='Conv5', border_mode='same', subsample=(1, 1)))#, W_regularizer=l2(REGULARIZE_PARAM),                                activity_regularizer=activity_l2(REGULARIZE_PARAM)))#, activation='relu'))
+        model.add(Convolution2D(36, 5, 5, name='Conv2', border_mode='same', subsample=(2, 2)))
+        model.add(Convolution2D(48, 5, 5, name='Conv3', border_mode='same', subsample=(2, 2)))
+        model.add(Convolution2D(64, 3, 3, name='Conv4', border_mode='same', subsample=(1, 1)))
+        model.add(Convolution2D(64, 3, 3, name='Conv5', border_mode='same', subsample=(1, 1)))
         model.add(Flatten(name='Flatten'))
-        model.add(Dense(1164, name='Dense1', init='uniform'))#, W_regularizer=l2(REGULARIZE_PARAM), activity_regularizer=activity_l2(REGULARIZE_PARAM)))#, activation='relu'))
+        model.add(Dense(1164, name='Dense1', init='uniform'))
         #model.add(Dropout(0.1))
         model.add(Dense(100, name='Dense2', init='uniform', activation='relu'))
         #model.add(Dropout(0.1))
@@ -116,7 +116,7 @@ class ModelHelper:
         Adam_optimizer = Adam(lr=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=DECAY)
         self.model.compile(loss='mean_squared_error', optimizer=Adam_optimizer, metrics=['accuracy'])
     
-    def start_training(self, x, y, x_val, y_val):
+    def start_training(self, x, y):
         #sgd = SGD(lr=LEARNING_RATE) #, momentum=MOMENTUM, decay=DECAY, nesterov=False)
         #self.model.compile(loss='mean_squared_error', optimizer=sgd, metrics=['accuracy'])
         hist = self.model.fit(x, y, nb_epoch=NUM_EPOCHS, batch_size=BATCH_SIZE, shuffle=True,
@@ -212,7 +212,7 @@ class ModelHelper:
         plt.show()
 
 if __name__ == '__main__':
-    model_filename = "model_2.json"
+    model_filename = "model.json"
     model_filename = model_filename[:-5]
     model_handle = ModelHelper(model_filename)
     model_handle.plot_model_to_file(model_filename)
@@ -232,22 +232,10 @@ if __name__ == '__main__':
             cv2.imshow("ROI Input", x[i])
             cv2.waitKey(1)
 
-    val_entries_count = int(len(entries) * ( 1 - train_size))
-    x_val, y_val = model_handle.get_next_entries(val_entries_count, entries)
-
-    for i in range(val_entries_count):
-        x_val[val_entries_count+i, :, :, :] = cv2.flip(x_val[i, :, :, :], 1)
-        y_val[val_entries_count+i] = -1.0 * y_val[i]
-
-    if show_data:
-        for i in range(val_entries_count):
-            cv2.imshow("ROI Input validation", x_val[i])
-            cv2.waitKey(30)
-
-    print ("Database size: {} Split: {} train; {} val".format(len(entries), train_entries_count, val_entries_count))
+    print ("Database size: {}".format(len(entries)))
 
     model_handle.set_optimizer_params(LEARNING_RATE)
-    hist = model_handle.start_training(x, y, x_val, y_val)
+    hist = model_handle.start_training(x, y)
     model_handle.save_model_to_json_file(model_filename)
     model_handle.save_model_weights(model_filename)
     #model_handle.plot_metrics(hist)
