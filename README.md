@@ -67,7 +67,7 @@ Reference network used to implement the steering wheel controller is [Nvidia pap
 
 **Model Architecture**
 
-![Network Architecture]({{site.baseurl}}/https://github.com/sagarbhokre/BigWheel-SteeringController/blob/master/model.jpg)
+![Network Architecture](https://github.com/sagarbhokre/BigWheel-SteeringController/blob/master/model.jpg)
 
 **Initial Training:**
 model.py is a reference model trainer. This script serves only as a starting point for training the network. 
