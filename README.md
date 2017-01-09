@@ -65,13 +65,37 @@ Neural Network details:
 
 Reference network used to implement the steering wheel controller is [Nvidia paper](https://arxiv.org/pdf/1604.07316.pdf)
 
+This network is known to work well for steering control and hence this was selected as a primary model for evaluation and development
+
 **Model Architecture**
 
-![Network Architecture](https://github.com/sagarbhokre/BigWheel-SteeringController/blob/master/model.jpg)
+![Network Architecture Image](https://github.com/sagarbhokre/BigWheel-SteeringController/blob/master/model.jpg)
+
+Neural network using in the implementation uses following layers:
+- Conv1 layer (24 kernels of size 5x5 and stride 2 in both x and y direction)
+- Conv2 layer (36 kernels of size 5x5 and stride 2 in both x and y direction)
+- Conv3 layer (48 kernels of size 5x5 and stride 2 in both x and y direction)
+- Conv4 layer (64 kernels of size 3x3 and stride 1 in both x and y direction)
+- Conv5 layer (64 kernels of size 3x3 and stride 1 in both x and y direction)
+- Dense1 layer (1164 neurons fully connected and passed through relu activation)
+- Dense2 layer (100 neurons fully connected and passed through relu activation)
+- Dense3 layer (50 neurons fully connected and passed through relu activation)
+- Dense4 layer (10 neurons fully connected and passed through relu activation)
+- Dense5 layer (1 neuron fully connected computing inverse tan)
+
+While training the network, data is internally split into 80% for training and 20% for validation
+
+Adam optimizer is used to train the network
+
+Since the network is trained On-The-Go and since it is cloning valid driving, there was no need to prune incoming data.
 
 **Initial Training:**
-model.py is a reference model trainer. This script serves only as a starting point for training the network. 
-This script is used to set a starting point for model's weights and biases. Record a set of images and steering angles using training mode of simulator and use this script to train the model. It is fine to train the network with 5-10 sec worth of data. It does not matter if the training happened with invalid data. Once initial training is done the model is refined and tuned on the training track. Actual training happens with the help of script drive.py (Explained ahead)
+
+To train the network for initial stage, Images were captured using "Training mode" of the simulator for about 1 min and then the model was trained using model.py script
+
+model.py is a reference model trainer. This script serves only as a starting point for training the network (starting point for model's weights and biases)
+
+Record a set of images and steering angles using training mode of simulator and use this script to train the model. It is fine to train the network with 5-10 sec worth of data. It does not matter if the training happened with invalid data. Once initial training is done the model is refined and tuned on the training track using drive.py script.(Explained ahead)
 
 **Currently generator is not being used to retrieve batches of data as this is an initial step**
 
