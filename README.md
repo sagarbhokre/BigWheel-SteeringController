@@ -1,5 +1,8 @@
-SteeringController
+BigWheel-SteeringController
 ========
+
+BigWheel is an Artificially Intelligent (AI) steering wheel controller which mimics human behavior. A baby on wheels to start with which evolves as it sees how we drive and learns as we drive. BigWheel confines its Region Of Interest and uses a neural network to learn how to maneuver on roads. All that is needed is a network initialized with random weights and around 1 hour of training to refine the performance to a level that BigWheel could potentially offload your daily mundane commute. On-The-Go training feature is a unique feature of this implementation and this AI module has a potential to improve with experience and drive the way you drive.
+
 
 Neural network to control steering angle
 
